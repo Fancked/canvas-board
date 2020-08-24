@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    * {
+      user-select: none;
+    }
+
+    canvas {
+      border: 1px solid black;
+    }
+
+    input[type='radio'] {
+      display: none;
+    }
+
+    label.checked {
+      background-color: skyblue;
+    }
+
+    label {
+      display: inline-block;
+      width: 120px;
+      height: 40px;
+      font-size: 20px;
+      line-height: 40px;
+      border: 1px solid black;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    li {
+      margin-bottom: 20px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <canvas class="canvas" width="1000" height="500"></canvas>
+    <ul>
+      <li class="shape">
+        <label for="s-pen" class="checked"><input type="radio" name="shape" value="pen" id="s-pen" /> 铅笔</label>
+        <label for="s-line"><input type="radio" name="shape" value="line" id="s-line" /> 直线</label>
+        <label for="s-rect"><input type="radio" name="shape" value="rect" id="s-rect" /> 矩形</label>
+        <label for="s-circle"><input type="radio" name="shape" value="circle" id="s-circle" /> 圆形</label>
+      </li>
+      <li class="border">
+        <label for="b-true" class="checked"><input type="radio" name="border" value="true" id="b-true" />边框</label>
+        <label for="b-false"><input type="radio" name="border" value="false" id="b-false" />无边框</label>
+      </li>
+      <li class="fill">
+        <label for="f-true"><input type="radio" name="fill" value="true" id="f-true" /> 填充</label>
+        <label for="f-false" class="checked"><input type="radio" name="fill" value="false" id="f-false" />无填充</label>
+      </li>
+      <li>
+        边框色 <input type="color" id="bordercolor" value="#000000">
+      </li>
+      <li>
+        填充色 <input type="color" id="fillcolor" value="#ffffff">
+      </li>
+      <li>
+        线宽 <input id="linewidth" type="range" min="1" max="30" step="1" value="1"></input>
+      </li>
+      <li>
+        <label id="clear">清空</label>
+        <label id='back'>撤销</label>
+      </li>
+    </ul>
+  </div>
+  <script src="./CanvasBoard.js"></script>
+  <script>
+    const board = new CanvasBoard('.canvas');
+    const slabel = document.querySelector('.shape').children;
+    const blabel = document.querySelector('.border').children;
+    const flabel = document.querySelector('.fill').children;
+    const borderc = document.querySelector('#bordercolor')
+    const fillc = document.querySelector('#fillcolor')
+    const lw = document.querySelector('#linewidth')
+    const oclear = document.querySelector('#clear')
+    const oback = document.querySelector('#back')
+
+    function radioEvent(s) {
+      s.addEventListener('click', e => {
+        if (e.target.nodeName === 'LABEL') {
+          [...e.target.parentNode.children].forEach(s => {
+            s.classList.remove('checked')
+          })
+          e.target.classList.add('checked');
+          if (e.target.parentNode.classList.contains('shape'))
+            board.setShape(e.target.children[0].value);
+          else if (e.target.parentNode.classList.contains('border')) {
+            board.setIfBorder(e.target.children[0].value === 'true' ? true : false)
+          } else if (e.target.parentNode.classList.contains('fill')) {
+            board.setIfFill(e.target.children[0].value === 'true' ? true : false)
+          }
+        }
+      })
+    }
+    [...slabel].forEach(radioEvent);
+    [...blabel].forEach(radioEvent);
+    [...flabel].forEach(radioEvent);
+
+
+    borderc.addEventListener('change', e => {
+      board.setBorderColor(e.target.value)
+    })
+    fillc.addEventListener('change', e => {
+      board.setFillColor(e.target.value)
+    })
+    lw.addEventListener('change', e => {
+      board.setLineWidth(e.target.value)
+    })
+    oclear.addEventListener('click', e => {
+      board.clearBoard();
+    })
+    oback.addEventListener('click', e => {
+      board.back();
+    })
+  </script>
+</body>
+</html>

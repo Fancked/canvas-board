@@ -132,4 +132,12 @@ class CanvasBoard {
       this.imgData.pop();
     }
   }
+  save() {
+    let imgUrl = this.canvas.toDataURL('image/png');
+    let saveA = document.createElement('a');
+    saveA.href = imgUrl;
+    saveA.download = 'cvs' + new Date().getTime();
+    saveA.target = '_blank';
+    saveA.click();
+  }
 }

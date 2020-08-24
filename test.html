@@ -9,7 +9,20 @@
       user-select: none;
     }
 
+    #app {
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-start;
+
+    }
+
+    ul {
+
+      background-color: #fff;
+    }
+
     canvas {
+      background-color: #fff;
       border: 1px solid black;
     }
 
@@ -40,7 +53,6 @@
 </head>
 <body>
   <div id="app">
-    <canvas class="canvas" width="1000" height="500"></canvas>
     <ul>
       <li class="shape">
         <label for="s-pen" class="checked"><input type="radio" name="shape" value="pen" id="s-pen" /> 铅笔</label>
@@ -63,17 +75,32 @@
         填充色 <input type="color" id="fillcolor" value="#ffffff">
       </li>
       <li>
-        线宽 <input id="linewidth" type="range" min="1" max="30" step="1" value="1"></input>
+        线宽 <input id="linewidth" type="range" min="2" max="30" step="1" value="2"></input>
       </li>
       <li>
         <label id="clear">清空</label>
         <label id='back'>撤销</label>
+        <label id='save'>下载</label>
       </li>
     </ul>
+    <canvas class="canvas" width="1000" height="600"></canvas>
+
   </div>
   <script src="./CanvasBoard.js"></script>
   <script>
-    const board = new CanvasBoard('.canvas');
+    const board = new CanvasBoard('.canvas', {
+      ifBorder: true,
+      // 是否填充
+      ifFill: false,
+      // 绘制图形选择
+      shape: 'pen',
+      // 外边框颜色
+      strokeStyle: '#000',
+      //  填充色
+      fillStyle: '#fff',
+      // 线条宽度
+      lineWidth: '2',
+    });
     const slabel = document.querySelector('.shape').children;
     const blabel = document.querySelector('.border').children;
     const flabel = document.querySelector('.fill').children;
@@ -82,6 +109,7 @@
     const lw = document.querySelector('#linewidth')
     const oclear = document.querySelector('#clear')
     const oback = document.querySelector('#back')
+    const osave = document.querySelector('#save')
 
     function radioEvent(s) {
       s.addEventListener('click', e => {
@@ -119,6 +147,9 @@
     })
     oback.addEventListener('click', e => {
       board.back();
+    })
+    osave.addEventListener('click', e => {
+      board.save();
     })
   </script>
 </body>
